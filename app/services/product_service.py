@@ -17,17 +17,17 @@ def add_product(product: product_schema.ProductCreate, db: Session):
     return db_product
 
 
-
 def get_product_by_id(id: int, db: Session):
-    return db.query(product_model.Product).filter(product_model.Product.id == id).first()
-
+    return (
+        db.query(product_model.Product).filter(product_model.Product.id == id).first()
+    )
 
 
 def update_product(id: int, product: product_schema.ProductCreate, db: Session):
     db_product = get_product_by_id(id, db)
     if not db_product:
         raise HTTPException(status_code=404, detail="Product Not Found")
-    
+
     product_helper.update_product_fields(db_product, product)
 
     db_product.name = product.name
@@ -38,7 +38,6 @@ def update_product(id: int, product: product_schema.ProductCreate, db: Session):
     db.commit()
     db.refresh(db_product)
     return db_product
-
 
 
 def delete_product(id: int, db: Session):
