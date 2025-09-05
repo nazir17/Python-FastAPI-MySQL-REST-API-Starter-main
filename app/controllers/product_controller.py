@@ -26,8 +26,7 @@ def get_product_id(id: int, db: Session = Depends(get_db)):
 
 @router.put("/{id}", response_model=response_schema.SingleResponse[product_schema.ProductOut])
 def update_product(id: int, product: product_schema.ProductCreate, db: Session = Depends(get_db)):
-    product = product_service.update_product(db, id, product)
-    # return product_service.update_product(id, product, db)
+    product = product_service.update_product(id, product, db)
     return success_response(data=product_schema.ProductOut.from_orm(product))
 
 @router.delete("/{id}")
