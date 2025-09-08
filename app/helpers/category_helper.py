@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.models.product_model import Category
-from app.schemas.product_schema import CategoryCreate, CategoryUpdate
+from app.models.category_model import Category
+from app.schemas.category_schema import CategoryCreate, CategoryUpdate
 
 
 def create_category(db: Session, category: CategoryCreate):
