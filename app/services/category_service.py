@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.helpers.category_helper import (create_category, get_categories, update_category, delete_category)
-from app.schemas.product_schema import CategoryCreate, CategoryUpdate
+from app.schemas.category_schema import CategoryCreate, CategoryUpdate
 
 
 def create_category_service(db: Session, category: CategoryCreate):

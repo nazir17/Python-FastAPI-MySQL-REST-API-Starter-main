@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from ..schemas import product_schema
 from ..helpers import product_helper
