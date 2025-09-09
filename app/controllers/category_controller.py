@@ -30,4 +30,4 @@ def update_category(
 
 @router.delete("/{category_id}/", status_code=200)
 def delete_category(category_id: int, db: Session = Depends(get_db)):
-    return category_service.soft_delete_category_service(db, category_id)
+    return category_service.delete_category_service(db, category_id)

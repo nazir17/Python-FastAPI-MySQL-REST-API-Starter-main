@@ -7,12 +7,15 @@ class CategoryBase(BaseModel):
     name: str
     parent_id: int
 
+
 class CategoryCreate(CategoryBase):
     pass
+
 
 class CategoryUpdate(BaseModel):
     name: str
     parent_id: int
+
 
 class CategoryOut(CategoryBase):
     id: int

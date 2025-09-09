@@ -10,12 +10,17 @@ def create_product(db: Session, product: product_schema.ProductCreate):
     db.refresh(db_product)
     return db_product
 
+
 def get_all_products(db: Session):
     return db.query(product_model.Product).all()
 
 
 def get_product_by_id(db: Session, product_id: int):
-    return db.query(product_model.Product).filter(product_model.Product.id == product_id).first()
+    return (
+        db.query(product_model.Product)
+        .filter(product_model.Product.id == product_id)
+        .first()
+    )
 
 
 def update_product(db: Session, product_id: int, product: product_schema.ProductCreate):

@@ -11,23 +11,33 @@ router = APIRouter()
 @router.get("/", response_model=response_schema.ListResponse[product_schema.ProductOut])
 def get_products(db: Session = Depends(get_db)):
     products = product_service.get_products(db)
-    return success_response(data=[product_schema.ProductOut.from_orm(product) for product in products])
+    return success_response(
+        data=[product_schema.ProductOut.from_orm(product) for product in products]
+    )
 
 
 @router.post("/add", response_model=product_schema.ProductOut)
 def add_product(product: product_schema.ProductCreate, db: Session = Depends(get_db)):
     return product_service.add_product(product, db)
 
-@router.get("/{id}", response_model=response_schema.SingleResponse[product_schema.ProductOut])
+
+@router.get(
+    "/{id}", response_model=response_schema.SingleResponse[product_schema.ProductOut]
+)
 def get_product_id(id: int, db: Session = Depends(get_db)):
     product = product_service.get_product_by_id(id, db)
     return success_response(data=product_schema.ProductOut.from_orm(product))
 
 
-@router.put("/{id}", response_model=response_schema.SingleResponse[product_schema.ProductOut])
-def update_product(id: int, product: product_schema.ProductCreate, db: Session = Depends(get_db)):
+@router.put(
+    "/{id}", response_model=response_schema.SingleResponse[product_schema.ProductOut]
+)
+def update_product(
+    id: int, product: product_schema.ProductCreate, db: Session = Depends(get_db)
+):
     product = product_service.update_product(id, product, db)
     return success_response(data=product_schema.ProductOut.from_orm(product))
+
 
 @router.delete("/{id}")
 def delete_product(id: int, db: Session = Depends(get_db)):

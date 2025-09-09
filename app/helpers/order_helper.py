@@ -9,7 +9,6 @@ from app.schemas.orderItem_schema import OrderItemCreate
 def add_order(db: Session, user_id: int, items: list[OrderItemCreate]):
     total_amount = 0
     order_items = []
-    
 
     for item in items:
 
@@ -26,7 +25,9 @@ def add_order(db: Session, user_id: int, items: list[OrderItemCreate]):
             )
         )
 
-    new_order = Order(user_id=user_id, total_amount=total_amount, order_items=order_items)
+    new_order = Order(
+        user_id=user_id, total_amount=total_amount, order_items=order_items
+    )
     db.add(new_order)
     db.commit()
     db.refresh(new_order)

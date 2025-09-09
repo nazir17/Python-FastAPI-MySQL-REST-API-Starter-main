@@ -13,11 +13,21 @@ def create_category(db: Session, category: CategoryCreate):
 
 
 def get_categories(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Category).filter(Category.is_deleted == False).offset(skip).limit(limit).all()
+    return (
+        db.query(Category)
+        .filter(Category.is_deleted == False)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 def update_category(db: Session, category_id: int, updates: CategoryUpdate):
-    db_category = db.query(Category).filter(Category.id == category_id, Category.is_deleted == False).first()
+    db_category = (
+        db.query(Category)
+        .filter(Category.id == category_id, Category.is_deleted == False)
+        .first()
+    )
     if not db_category:
         raise HTTPException(status_code=404, detail="Category not found")
 
