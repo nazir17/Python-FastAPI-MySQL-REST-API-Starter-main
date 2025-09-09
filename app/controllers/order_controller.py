@@ -18,10 +18,14 @@ def add_order(order: OrderCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=response_schema.ListResponse[order_schema.OrderOut])
 def get_orders(db: Session = Depends(get_db)):
     orders = order_service.get_orders_service(db)
-    return success_response(data=[order_schema.OrderOut.from_orm(order) for order in orders])
+    return success_response(
+        data=[order_schema.OrderOut.from_orm(order) for order in orders]
+    )
 
 
-@router.put("/{order_id}", response_model=response_schema.SingleResponse[order_schema.OrderOut])
+@router.put(
+    "/{order_id}", response_model=response_schema.SingleResponse[order_schema.OrderOut]
+)
 def update_order(order_id: int, order: OrderUpdate, db: Session = Depends(get_db)):
     order = order_service.update_order_service(db, order_id, order)
     if not order:

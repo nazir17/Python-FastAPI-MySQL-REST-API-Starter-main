@@ -8,12 +8,15 @@ from app.schemas.orderItem_schema import OrderItemCreate, OrderItemOut
 class OrderBase(BaseModel):
     user_id: int
 
+
 class OrderCreate(OrderBase):
     order_items: List[OrderItemCreate]
     user_id: int
 
+
 class OrderUpdate(BaseModel):
     status: OrderStatus = None
+
 
 class OrderOut(OrderBase):
     id: int

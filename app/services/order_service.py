@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.schemas.order_schema import OrderCreate, OrderUpdate
-from ..helpers import order_helper
+from app.helpers import order_helper
 
 
 def add_order_service(db: Session, order: OrderCreate):
@@ -13,4 +13,3 @@ def get_orders_service(db: Session, skip: int = 0, limit: int = 10):
 
 def update_order_service(db: Session, order_id: int, order: OrderUpdate):
     return order_helper.update_order(db, order_id, order)
-
