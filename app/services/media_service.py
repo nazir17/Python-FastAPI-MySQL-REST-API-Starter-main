@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from app.models.media_model import Media, MediaType, EntityType
-from app.schemas.media_schema import MediaCreate
+from fastapi import UploadFile, status, HTTPException
 from app.helpers import media_helper
-from fastapi import UploadFile, HTTPException
+from app.helpers.exceptions import CustomException
+from ..models.media_model import Media
 
 
 def get_media(db: Session, media_id: int):
@@ -12,72 +12,60 @@ def get_media(db: Session, media_id: int):
     return media
 
 
-def upload_media(db: Session, file: UploadFile, media_data: MediaCreate):
-    file_path = media_helper.save_file(file, media_data.entity_type, media_data.media_type)
-
-    new_media = Media(
-        file_name=file.filename,
-        file_path=file_path,
-        media_type=media_data.media_type,
-        entity_type=media_data.entity_type,
-        entity_id=media_data.entity_id,
-    )
-    db.add(new_media)
-    db.commit()
-    db.refresh(new_media)
-    return new_media
 
 
-def update_media(db: Session, media_id: int, file: UploadFile):
-    media = db.query(Media).filter(Media.id == media_id).first()
-    if not media:
-        raise HTTPException(status_code=404, detail="Media not found")
+def handle_media(
+    db: Session,
+    files: list[UploadFile],
+    entity_type: str,
+    media_type: str,
+    entity_id: int,
+):
+    try:
+        results = []
+        for file in files:
+            media = media_helper.handle_media(
+                db=db,
+                file=file,
+                entity_type=entity_type,
+                media_type=media_type,
+                entity_id=entity_id,
+                Media=Media,
+            )
+            results.append(media)
 
-    media_helper.delete_file(media.file_path)
+        return results[0] if len(results) == 1 else results
 
-    new_path = media_helper.save_file(file, media.entity_type, media.media_type)
+    except Exception as e:
+        raise CustomException(message=str(e), status_code=status.HTTP_400_BAD_REQUEST)
 
-    media.file_name = file.filename
-    media.file_path = new_path
-    db.commit()
-    db.refresh(media)
-    return media
+
+def update_media(
+    db: Session, updates: list[dict], entity_type: str, media_type: str, entity_id: int
+):
+
+    try:
+        return media_helper.update_media(
+            db=db,
+            updates=updates,
+            entity_type=entity_type,
+            media_type=media_type,
+            entity_id=entity_id,
+            Media=Media,
+        )
+    except Exception as e:
+        raise CustomException(message=str(e), status_code=status.HTTP_400_BAD_REQUEST)
 
 
 def delete_media(db: Session, media_id: int):
-    media = db.query(Media).filter(Media.id == media_id).first()
-    if not media:
-        raise HTTPException(status_code=404, detail="Media not found")
-
-    media_helper.delete_file(media.file_path)
-    db.delete(media)
-    db.commit()
-    return {"message": "Media deleted successfully"}
-
-from typing import List
-
-
-
-def upload_multiple_media(db: Session, files: List[UploadFile], media_data: MediaCreate):
-    uploaded_media = []
-
-    for file in files:
-        file_path = media_helper.save_file(file, media_data.entity_type, media_data.media_type)
-
-        new_media = Media(
-            file_name=file.filename,
-            file_path=file_path,
-            entity_type=media_data.entity_type,
-            entity_id=media_data.entity_id,
-            media_type=media_data.media_type,
+    db_media = db.query(Media).filter(Media.id == media_id).first()
+    if not db_media:
+        raise CustomException(
+            message="Media not found", status_code=status.HTTP_404_NOT_FOUND
         )
-        db.add(new_media)
-        db.commit()
-        db.refresh(new_media)
-        uploaded_media.append(new_media)
 
-    return uploaded_media
+    media_helper.delete_media(db_media.file_path)
 
-
-
-
+    db.delete(db_media)
+    db.commit()
+    return {"success": True, "message": "Media deleted successfully"}
