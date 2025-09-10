@@ -5,11 +5,13 @@ from enum import Enum
 class MediaTypeEnum(str, Enum):
     IMAGE = "image"
     VIDEO = "video"
+    DOCUMENT = "document"
 
 
 class EntityTypeEnum(str, Enum):
     PRODUCT = "product"
     CATEGORY = "category"
+    DOCUMENT = "document"
 
 
 class MediaBase(BaseModel):
