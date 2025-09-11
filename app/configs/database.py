@@ -7,6 +7,7 @@ from sqlalchemy.exc import OperationalError
 
 SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}/{settings.DB_NAME}"
 
+
 def create_db_engine_with_retry(retries=5, delay=5):
     for i in range(retries):
         try:
@@ -16,13 +17,17 @@ def create_db_engine_with_retry(retries=5, delay=5):
             print("Database connection successful.")
             return engine
         except OperationalError as e:
-            print(f"Database connection failed. Retrying in {delay} seconds... ({i+1}/{retries})")
+            print(
+                f"Database connection failed. Retrying in {delay} seconds... ({i+1}/{retries})"
+            )
             time.sleep(delay)
     raise e
+
 
 engine = create_db_engine_with_retry()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()

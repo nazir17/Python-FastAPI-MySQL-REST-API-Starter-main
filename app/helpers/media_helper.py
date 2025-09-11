@@ -112,7 +112,7 @@ def validate_upload_limit(db, entity_type: str, entity_id: int, media_type: str,
         )
 
 
-def save_file(file: UploadFile, entity_type: str, media_type: str) -> (str):
+def save_file(file: UploadFile, entity_type: str, media_type: str) -> str:
     validate_media_type(file, media_type)
     validate_file_size(file, media_type)
 
@@ -135,10 +135,9 @@ def save_file(file: UploadFile, entity_type: str, media_type: str) -> (str):
     return str(save_path), unique_name
 
 
-
-
-
-def handle_media(db, file: UploadFile, entity_type: str, media_type: str, entity_id: int, Media):
+def handle_media(
+    db, file: UploadFile, entity_type: str, media_type: str, entity_id: int, Media
+):
     validate_upload_limit(db, entity_type, entity_id, media_type, Media)
 
     save_path, unique_name = save_file(file, entity_type, media_type)
@@ -158,8 +157,10 @@ def handle_media(db, file: UploadFile, entity_type: str, media_type: str, entity
     return db_media
 
 
-def update_media(db, updates: list[dict], entity_type: str, media_type: str, entity_id: int, Media):
-    
+def update_media(
+    db, updates: list[dict], entity_type: str, media_type: str, entity_id: int, Media
+):
+
     updated_list = []
 
     for update in updates:
@@ -178,15 +179,14 @@ def update_media(db, updates: list[dict], entity_type: str, media_type: str, ent
         )
 
         if not db_media:
-            raise HTTPException(status_code=404, detail=f"Media with id {media_id} not found")
+            raise HTTPException(
+                status_code=404, detail=f"Media with id {media_id} not found"
+            )
 
-        
         delete_media(db_media.file_path)
 
-        
         save_path, unique_name = save_file(file, entity_type, media_type)
 
-        
         db_media.file_name = unique_name
         db_media.file_path = save_path
 
@@ -199,6 +199,7 @@ def update_media(db, updates: list[dict], entity_type: str, media_type: str, ent
         db.refresh(media)
 
     return updated_list
+
 
 def delete_media(path: str):
     if os.path.exists(path):

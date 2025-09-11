@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import TypeVar, Generic, List
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class Meta(BaseModel):
@@ -9,6 +9,7 @@ class Meta(BaseModel):
     size: int
     total_records: int
     total_pages: int
+
 
 class PaginatedResponse(BaseModel, Generic[T]):
     success: bool = True
@@ -20,18 +21,22 @@ class ListResponse(BaseModel, Generic[T]):
     success: bool
     data: List[T]
 
+
 class ListWithTotalResponse(BaseModel, Generic[T]):
     success: bool
     data: List[T]
     total_records: int
+
 
 class SingleResponse(BaseModel, Generic[T]):
     success: bool = True
     message: str | None = None
     data: T | None = None
 
+
 class SuccessOnlyResponse(BaseModel):
     success: bool = True
+
 
 class SuccessWithIdOnlyResponse(BaseModel):
     success: bool = True
@@ -47,4 +52,3 @@ class ValidationErrorResponse(BaseModel):
     success: bool = False
     message: str
     errors: List[str] | None = None
-

@@ -18,3 +18,4 @@ class Product(Base):
     order_items = relationship(
         "OrderItem", back_populates="products", cascade="all, delete-orphan"
     )
+    cart_items = relationship("CartItem", back_populates="product")

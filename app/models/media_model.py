@@ -24,4 +24,3 @@ class Media(Base):
     media_type = Column(String(50), nullable=False)
     entity_type = Column(String(50), nullable=False)
     entity_id = Column(Integer, nullable=False)
-
