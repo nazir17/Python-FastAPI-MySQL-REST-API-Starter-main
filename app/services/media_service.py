@@ -7,7 +7,7 @@ from app.schemas.media_schema import MediaOut
 
 
 def to_media_out(media: Media) -> MediaOut:
-    """Convert SQLAlchemy Media object to Pydantic MediaOut"""
+
     return MediaOut.model_validate({
         "id": media.id,
         "file_name": media.file_name,
