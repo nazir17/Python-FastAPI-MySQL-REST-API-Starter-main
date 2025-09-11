@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from typing import List, Union
 from app.configs.database import get_db
-from app.schemas.media_schema import MediaOut, MediaCreate
+from app.schemas.media_schema import MediaOut
 from app.services import media_service
 from app.helpers import media_helper
 
