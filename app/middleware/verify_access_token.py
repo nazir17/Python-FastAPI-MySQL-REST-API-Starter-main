@@ -13,7 +13,10 @@ ALGORITHM = "HS256"
 
 api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
 
-def verify_access_token(db: Session = Depends(get_db), token: str = Security(api_key_header)):
+
+def verify_access_token(
+    db: Session = Depends(get_db), token: str = Security(api_key_header)
+):
     # try:
     #     if not token:
     #         raise CustomException(message="Invalid token", status_code=status.HTTP_401_UNAUTHORIZED)
@@ -21,7 +24,7 @@ def verify_access_token(db: Session = Depends(get_db), token: str = Security(api
     #     if parts[0].lower() != "bearer" or len(parts) != 2:
     #         raise CustomException(message="Invalid token format", status_code=status.HTTP_401_UNAUTHORIZED)
     #     token = parts[1]
-            
+
     #     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     #     email: str = payload.get("sub")
     #     if email is None:

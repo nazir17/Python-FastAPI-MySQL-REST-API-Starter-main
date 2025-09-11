@@ -21,3 +21,5 @@ class User(Base):
     reset_token_expires = Column(DateTime, nullable=True)
 
     orders = relationship("Order", back_populates="user")
+    cart_items = relationship("CartItem", back_populates="user")
+    payments = relationship("Payment", back_populates="user")

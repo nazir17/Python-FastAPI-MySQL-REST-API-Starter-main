@@ -7,7 +7,11 @@ from app.initial_data import create_initial_users
 from app.helpers.response_helper import internal_server_error_response
 from app.utils.logger import logger
 from app.helpers.exceptions import CustomException
-from app.middleware.exception_handler_middleware import custom_exception_handler, validation_exception_handler, http_exception_handler
+from app.middleware.exception_handler_middleware import (
+    custom_exception_handler,
+    validation_exception_handler,
+    http_exception_handler,
+)
 from fastapi.exceptions import RequestValidationError, HTTPException
 from app.controllers import register_routers
 
@@ -27,14 +31,17 @@ app.add_exception_handler(CustomException, custom_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(HTTPException, http_exception_handler)
 
+
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     logger.error(f"An unexpected error occurred: {exc}")
     return internal_server_error_response()
 
+
 @app.on_event("startup")
 def on_startup():
     create_initial_users()
+
 
 # @app.middleware("http")
 # async def log_requests(request: Request, call_next):

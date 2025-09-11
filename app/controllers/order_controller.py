@@ -5,6 +5,7 @@ from app.configs.database import get_db
 from app.schemas.order_schema import OrderCreate, OrderUpdate, OrderOut
 import app.services.order_service as order_service
 from app.helpers.response_helper import success_response
+from app.services.order_service import checkout
 
 
 router = APIRouter()
@@ -31,3 +32,8 @@ def update_order(order_id: int, order: OrderUpdate, db: Session = Depends(get_db
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return success_response(data=order_schema.OrderOut.from_orm(order))
+
+
+@router.post("/checkout", response_model=OrderOut)
+def checkout_order(user_id: int, db: Session = Depends(get_db)):
+    return checkout(db, user_id)

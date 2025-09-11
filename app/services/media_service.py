@@ -8,14 +8,16 @@ from app.schemas.media_schema import MediaOut
 
 def to_media_out(media: Media) -> MediaOut:
 
-    return MediaOut.model_validate({
-        "id": media.id,
-        "file_name": media.file_name,
-        "file_path": media.file_path,
-        "entity_type": str(media.entity_type).lower(),
-        "entity_id": media.entity_id,
-        "media_type": str(media.media_type).lower(),
-    })
+    return MediaOut.model_validate(
+        {
+            "id": media.id,
+            "file_name": media.file_name,
+            "file_path": media.file_path,
+            "entity_type": str(media.entity_type).lower(),
+            "entity_id": media.entity_id,
+            "media_type": str(media.media_type).lower(),
+        }
+    )
 
 
 def get_media(db: Session, media_id: int):
