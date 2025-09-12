@@ -5,4 +5,7 @@ from .order_model import Order
 from .order_Item_model import OrderItem
 from .media_model import Media
 from .cart_items_model import CartItem
+from .payment_model import Payment
+from .shipping_model import Shipping
+from .review_model import Review
 

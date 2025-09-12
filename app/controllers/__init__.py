@@ -10,7 +10,8 @@ from . import (
     media_controller,
     cart_items_controller,
     payment_controller,
-    shipping_controller
+    shipping_controller,
+    review_controller,
 )
 
 
@@ -33,5 +34,6 @@ def register_routers(app):
         payment_controller.router, prefix="/api/payment", tags=["Payments"]
     )
     app.include_router(
-        shipping_controller.router, prefix="/api/shipping", tags=["Shipping"]
+        shipping_controller.router, prefix="/api/shipping", tags=["Shippings"]
     )
+    app.include_router(review_controller.router, prefix="/api/review", tags=["Reviews"])
