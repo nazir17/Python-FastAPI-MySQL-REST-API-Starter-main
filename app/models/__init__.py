@@ -8,4 +8,4 @@ from .cart_items_model import CartItem
 from .payment_model import Payment
 from .shipping_model import Shipping
 from .review_model import Review
-
+from .wishlist_model import Wishlist
