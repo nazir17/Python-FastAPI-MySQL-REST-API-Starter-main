@@ -24,3 +24,4 @@ class User(Base):
     cart_items = relationship("CartItem", back_populates="user")
     payments = relationship("Payment", back_populates="user")
     reviews = relationship("Review", back_populates="user")
+    wishlist_items = relationship("Wishlist", back_populates="user")
