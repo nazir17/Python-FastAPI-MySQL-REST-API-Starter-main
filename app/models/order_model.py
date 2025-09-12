@@ -25,4 +25,5 @@ class Order(Base):
     order_items = relationship(
         "OrderItem", back_populates="order", cascade="all, delete-orphan"
     )
-    payment = relationship("Payment", back_populates="order", uselist=False)
+    payment = relationship("Payment", back_populates="order")
+    shipping = relationship("Shipping", back_populates="order")
