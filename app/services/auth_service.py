@@ -7,17 +7,15 @@ import secrets
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from ..configs.database import get_db
 from ..configs.config import settings
 from ..helpers.exceptions import CustomException
-from app.middleware.verify_access_token import verify_access_token
 
 SECRET_KEY = settings.JWT_SECRET
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 1000
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/signin")
 
 
 def get_user_by_email(db: Session, email: str):

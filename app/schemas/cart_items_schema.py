@@ -17,7 +17,6 @@ class CartItemUpdate(BaseModel):
 
 class CartItemOut(CartItemBase):
     id: int
-    user_id: int
     created_at: datetime
     updated_at: datetime
 

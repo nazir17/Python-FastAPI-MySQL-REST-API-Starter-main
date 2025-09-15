@@ -5,15 +5,20 @@ from app.configs.database import get_db
 from app.schemas.order_schema import OrderCreate, OrderUpdate, OrderOut
 import app.services.order_service as order_service
 from app.helpers.response_helper import success_response
-from app.services.order_service import checkout
+from app.middleware.verify_access_token import verify_access_token
+from app.schemas import user_schema
 
 
 router = APIRouter()
 
 
-@router.post("/", response_model=OrderOut)
-def add_order(order: OrderCreate, db: Session = Depends(get_db)):
-    return order_service.add_order_service(db, order)
+# @router.post("/", response_model=OrderOut)
+# def add_order(
+#     order: OrderCreate,
+#     db: Session = Depends(get_db),
+#     current_user: user_schema.User = Depends(verify_access_token),
+# ):
+#     return order_service.add_order_service(db, order, current_user)
 
 
 @router.get("/", response_model=response_schema.ListResponse[order_schema.OrderOut])
@@ -34,6 +39,4 @@ def update_order(order_id: int, order: OrderUpdate, db: Session = Depends(get_db
     return success_response(data=order_schema.OrderOut.from_orm(order))
 
 
-@router.post("/checkout", response_model=OrderOut)
-def checkout_order(user_id: int, db: Session = Depends(get_db)):
-    return checkout(db, user_id)
+
