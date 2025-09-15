@@ -18,7 +18,6 @@ class PaymentMethodEnum(str, Enum):
 
 
 class PaymentBase(BaseModel):
-    user_id: int
     order_id: int
     method: PaymentMethodEnum
     amount: float

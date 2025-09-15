@@ -32,6 +32,5 @@ class Payment(Base):
     transaction_id = Column(String(100), unique=True, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
     user = relationship("User", back_populates="payments")
     order = relationship("Order", back_populates="payment")

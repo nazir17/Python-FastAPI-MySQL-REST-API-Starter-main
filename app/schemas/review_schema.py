@@ -6,7 +6,6 @@ class ReviewBase(BaseModel):
     comment: str | None = None
 
 class ReviewCreate(ReviewBase):
-    user_id: int
     product_id: int
 
 class ReviewUpdate(BaseModel):

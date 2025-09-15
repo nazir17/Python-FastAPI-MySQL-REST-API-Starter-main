@@ -6,12 +6,12 @@ from app.schemas.orderItem_schema import OrderItemCreate, OrderItemOut
 
 
 class OrderBase(BaseModel):
-    user_id: int
+    pass
 
 
 class OrderCreate(OrderBase):
     order_items: List[OrderItemCreate]
-    user_id: int
+
 
 
 class OrderUpdate(BaseModel):
