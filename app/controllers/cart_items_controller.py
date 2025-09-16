@@ -10,8 +10,6 @@ from app.schemas.order_schema import OrderOut
 from app.services.cart_items_service import checkout
 
 
-
-
 router = APIRouter()
 
 
@@ -39,7 +37,10 @@ def delete_cart_item(cart_item_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/list", response_model=List[CartItemOut])
-def get_cart_items(current_user: user_schema.User = Depends(verify_access_token), db: Session = Depends(get_db)):
+def get_cart_items(
+    current_user: user_schema.User = Depends(verify_access_token),
+    db: Session = Depends(get_db),
+):
     return cart_items_service.get_cart_items(db, current_user)
 
 

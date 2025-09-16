@@ -15,4 +15,3 @@ def get_orders_service(db: Session, skip: int = 0, limit: int = 10):
 
 def update_order_service(db: Session, order_id: int, order: OrderUpdate):
     return order_helper.update_order(db, order_id, order)
-

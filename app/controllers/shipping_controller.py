@@ -6,6 +6,7 @@ from app.services import shipping_service
 
 router = APIRouter()
 
+
 @router.post("/", response_model=ShippingOut)
 def create_shipping(shipping_data: ShippingCreate, db: Session = Depends(get_db)):
     return shipping_service.create_shipping(db, shipping_data)
@@ -17,7 +18,9 @@ def get_shipping(shipping_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/{shipping_id}", response_model=ShippingOut)
-def update_shipping(shipping_id: int, update_data: ShippingUpdate, db: Session = Depends(get_db)):
+def update_shipping(
+    shipping_id: int, update_data: ShippingUpdate, db: Session = Depends(get_db)
+):
     return shipping_service.update_shipping(db, shipping_id, update_data)
 
 

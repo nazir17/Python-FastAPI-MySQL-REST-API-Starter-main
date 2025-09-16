@@ -5,7 +5,6 @@ from app.schemas.wishlist_schema import WishlistCreate
 from app.models.user_model import User
 
 
-
 def add_to_wishlist(db: Session, wishlist_data: WishlistCreate, current_user: User):
     existing = (
         db.query(Wishlist)
@@ -22,7 +21,9 @@ def add_to_wishlist(db: Session, wishlist_data: WishlistCreate, current_user: Us
             detail="Product already in wishlist",
         )
 
-    wishlist_item = Wishlist(user_id=current_user.id, product_id=wishlist_data.product_id)
+    wishlist_item = Wishlist(
+        user_id=current_user.id, product_id=wishlist_data.product_id
+    )
     db.add(wishlist_item)
     db.commit()
     db.refresh(wishlist_item)

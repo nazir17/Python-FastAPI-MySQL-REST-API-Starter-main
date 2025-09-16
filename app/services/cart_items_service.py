@@ -6,10 +6,13 @@ from app.helpers import order_helper
 from app.models.order_model import Order
 
 
-
-def add_to_cart(db: Session, product_id: int, product_quantity: int, current_user: User):
+def add_to_cart(
+    db: Session, product_id: int, product_quantity: int, current_user: User
+):
     try:
-        return cart_items_helper.add_to_cart(db, product_id, product_quantity, current_user)
+        return cart_items_helper.add_to_cart(
+            db, product_id, product_quantity, current_user
+        )
     except Exception as e:
         raise CustomException(message=str(e))
 
@@ -33,7 +36,7 @@ def get_cart_items(db: Session, current_user: User):
         return cart_items_helper.get_cart_items(db, current_user)
     except Exception as e:
         raise CustomException(message=str(e))
-    
+
 
 def checkout(db: Session, current_user: User) -> Order:
     return order_helper.checkout_cart(db, current_user)
