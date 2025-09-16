@@ -7,11 +7,9 @@ from app.models.order_model import Order
 from app.models.order_Item_model import OrderItem
 
 
-
-
-
-
-def add_to_cart(db: Session, current_user: User, product_id: int, product_quantity: int):
+def add_to_cart(
+    db: Session, current_user: User, product_id: int, product_quantity: int
+):
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -26,7 +24,9 @@ def add_to_cart(db: Session, current_user: User, product_id: int, product_quanti
         cart_item.product_quantity += product_quantity
     else:
         cart_item = CartItem(
-            user_id=current_user.id, product_id=product_id, product_quantity=product_quantity
+            user_id=current_user.id,
+            product_id=product_id,
+            product_quantity=product_quantity,
         )
         db.add(cart_item)
 

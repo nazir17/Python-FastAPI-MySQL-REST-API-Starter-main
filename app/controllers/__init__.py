@@ -13,6 +13,7 @@ from . import (
     shipping_controller,
     review_controller,
     wishlist_controller,
+    product_inventory_controller
 )
 
 
@@ -40,4 +41,7 @@ def register_routers(app):
     app.include_router(review_controller.router, prefix="/api/review", tags=["Reviews"])
     app.include_router(
         wishlist_controller.router, prefix="/api/wishlist", tags=["Wishlists"]
+    )
+    app.include_router(
+        product_inventory_controller.router, prefix="/api/product-inventory", tags=["Product Inventory"]
     )

@@ -37,6 +37,3 @@ def update_order(order_id: int, order: OrderUpdate, db: Session = Depends(get_db
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return success_response(data=order_schema.OrderOut.from_orm(order))
-
-
-

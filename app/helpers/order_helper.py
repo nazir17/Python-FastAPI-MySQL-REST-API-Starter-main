@@ -9,7 +9,6 @@ from fastapi import HTTPException, Depends
 from app.models.user_model import User
 
 
-
 # def add_order(db: Session, items: list[OrderItemCreate], current_user: User):
 #     total_amount = 0
 #     order_items = []
@@ -54,6 +53,3 @@ def update_order(db: Session, order_id: int, order: OrderUpdate):
     db.commit()
     db.refresh(db_order)
     return db_order
-
-
-
