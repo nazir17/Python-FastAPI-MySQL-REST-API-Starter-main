@@ -19,5 +19,5 @@ class Product(Base):
     cart_items = relationship("CartItem", back_populates="product")
     reviews = relationship("Review", back_populates="product")
     wishlist_items = relationship("Wishlist", back_populates="product")
-    inventory = relationship("ProductInventory", uselist=False, back_populates="product")
-
+    inventory = relationship("ProductInventory", back_populates="product", uselist=False)
+    history = relationship("InventoryHistory", back_populates="product")
