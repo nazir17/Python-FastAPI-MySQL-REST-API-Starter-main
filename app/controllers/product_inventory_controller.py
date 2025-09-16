@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.configs.database import get_db
 from app.schemas.product_inventory_schema import (
@@ -6,6 +6,8 @@ from app.schemas.product_inventory_schema import (
     ProductInventoryOut,
 )
 from app.services import product_inventory_service
+from app.schemas.inventory_history_schema import InventoryHistoryOut
+from app.models.inventory_history_model import InventoryHistory
 
 router = APIRouter()
 
@@ -35,3 +37,8 @@ def restock(product_id: int, quantity: int, db: Session = Depends(get_db)):
 @router.get("/{product_id}", response_model=ProductInventoryOut)
 def get_inventory(product_id: int, db: Session = Depends(get_db)):
     return product_inventory_service.get_inventory(db, product_id)
+
+@router.get("/history/{product_id}", response_model=list[InventoryHistoryOut])
+def get_inventory_history(product_id: int, db: Session = Depends(get_db)):
+    return product_inventory_service.get_inventory_history(db, product_id)
+

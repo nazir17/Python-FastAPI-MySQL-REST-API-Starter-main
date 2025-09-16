@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.models.product_inventory_model import ProductInventory
 from app.schemas.product_inventory_schema import ProductInventoryCreate
+from app.models.inventory_history_model import InventoryHistory
 
 
 def create_inventory(db: Session, data: ProductInventoryCreate):
@@ -20,10 +21,19 @@ def create_inventory(db: Session, data: ProductInventoryCreate):
     db.add(inventory)
     db.commit()
     db.refresh(inventory)
+
+    history = InventoryHistory(
+        product_id=inventory.product_id,
+        change_type="create",
+        quantity_change=data.stock,
+    )
+    db.add(history)
+    db.commit()
+
     return inventory
 
 
-def update_stock(db: Session, product_id: int, change: int):
+def update_stock(db: Session, product_id: int, change: int, change_type: str):
     inventory = (
         db.query(ProductInventory)
         .filter(ProductInventory.product_id == product_id)
@@ -43,6 +53,13 @@ def update_stock(db: Session, product_id: int, change: int):
     inventory.stock = new_stock
     db.commit()
     db.refresh(inventory)
+
+    history = InventoryHistory(
+        product_id=inventory.product_id, change_type=change_type, quantity_change=change
+    )
+    db.add(history)
+    db.commit()
+
     return inventory
 
 
@@ -51,4 +68,12 @@ def get_inventory(db: Session, product_id: int):
         db.query(ProductInventory)
         .filter(ProductInventory.product_id == product_id)
         .first()
+    )
+
+
+def get_inventory_history(db: Session, product_id: int):
+    return (
+        db.query(InventoryHistory)
+        .filter(InventoryHistory.product_id == product_id)
+        .all()
     )
