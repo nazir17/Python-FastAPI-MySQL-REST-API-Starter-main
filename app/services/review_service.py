@@ -3,7 +3,7 @@ from app.helpers import review_helper
 from app.schemas.review_schema import ReviewCreate, ReviewUpdate
 
 
-def create_review(db: Session, review_data: ReviewCreate):
+def create_review(db: Session, review_data: dict):
     return review_helper.create_review(db, review_data)
 
 

@@ -8,7 +8,8 @@ class InventoryHistoryBase(BaseModel):
 
 class InventoryHistoryOut(InventoryHistoryBase):
     id: int
-    created_at: datetime
+    user_id: int | None
+    updated_at: datetime
 
     class Config:
         from_attributes = True

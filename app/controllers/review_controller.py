@@ -3,13 +3,21 @@ from sqlalchemy.orm import Session
 from app.configs.database import get_db
 from app.schemas.review_schema import ReviewCreate, ReviewOut, ReviewUpdate
 from app.services import review_service
+from app.schemas import user_schema
+from app.middleware.verify_access_token import verify_access_token
 
 router = APIRouter()
 
 
 @router.post("/", response_model=ReviewOut)
-def create_review(review_data: ReviewCreate, db: Session = Depends(get_db)):
-    return review_service.create_review(db, review_data)
+def create_review(
+    review_data: ReviewCreate,
+    db: Session = Depends(get_db),
+    current_user: user_schema.User = Depends(verify_access_token),
+):
+    review_dict = review_data.dict()
+    review_dict["user_id"] = current_user.id
+    return review_service.create_review(db, review_dict)
 
 
 @router.get("/{review_id}", response_model=ReviewOut)

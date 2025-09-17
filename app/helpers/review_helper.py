@@ -4,8 +4,8 @@ from app.models.review_model import Review
 from app.schemas.review_schema import ReviewCreate, ReviewUpdate
 
 
-def create_review(db: Session, review_data: ReviewCreate):
-    review = Review(**review_data.dict())
+def create_review(db: Session, review_data: dict):
+    review = Review(**review_data)
     db.add(review)
     db.commit()
     db.refresh(review)

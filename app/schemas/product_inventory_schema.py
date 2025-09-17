@@ -14,6 +14,7 @@ class ProductInventoryUpdate(BaseModel):
 class ProductInventoryOut(BaseModel):
     id: int
     product_id: int
+    user_id: int
     stock: int
     updated_at: datetime
 

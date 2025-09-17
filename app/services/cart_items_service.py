@@ -39,4 +39,4 @@ def get_cart_items(db: Session, current_user: User):
 
 
 def checkout(db: Session, current_user: User) -> Order:
-    return order_helper.checkout_cart(db, current_user)
+    return cart_items_helper.checkout_cart(db, current_user)

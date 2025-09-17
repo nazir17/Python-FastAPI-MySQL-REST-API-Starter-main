@@ -5,7 +5,7 @@ from app.helpers import payment_helper
 
 
 def create_payment(db: Session, payment_data: PaymentCreate):
-    payment = Payment(**payment_data.dict())
+    payment = Payment(**payment_data)
     return payment_helper.process_payment(db, payment)
 
 

@@ -57,7 +57,7 @@ def delete_cart_item(db: Session, cart_item_id: int):
 
 
 def get_cart_items(db: Session, current_user: User):
-    return db.query(CartItem).filter(CartItem.id == current_user.id).all()
+    return db.query(CartItem).filter(CartItem.user_id == current_user.id).all()
 
 
 def checkout_cart(db: Session, current_user: User):

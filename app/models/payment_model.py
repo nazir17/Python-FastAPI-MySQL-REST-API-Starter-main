@@ -9,6 +9,7 @@ class PaymentStatus(enum.Enum):
     PENDING = "pending"
     SUCCESS = "success"
     FAILED = "failed"
+    REFUND = "refund"
 
 
 class PaymentMethod(enum.Enum):
@@ -30,7 +31,7 @@ class Payment(Base):
     currency = Column(String(10), default="INR")
     status = Column(Enum(PaymentStatus), default=PaymentStatus.PENDING)
     transaction_id = Column(String(100), unique=True, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
 
     user = relationship("User", back_populates="payments")
     order = relationship("Order", back_populates="payment")

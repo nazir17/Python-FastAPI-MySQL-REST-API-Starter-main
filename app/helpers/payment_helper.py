@@ -23,7 +23,7 @@ def refund_payment(db: Session, payment: Payment) -> Payment:
             status_code=400, detail="Only successful payments can be refunded"
         )
 
-    payment.status = PaymentStatus.FAILED
+    payment.status = PaymentStatus.REFUND
     db.commit()
     db.refresh(payment)
     return payment

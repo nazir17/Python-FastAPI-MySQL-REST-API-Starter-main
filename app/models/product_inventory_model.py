@@ -13,7 +13,9 @@ class ProductInventory(Base):
         unique=True,
         nullable=False,
     )
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     stock = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     product = relationship("Product", back_populates="inventory")
+    user = relationship("User", back_populates="product_inventory")

@@ -5,7 +5,7 @@ from app.schemas.product_inventory_schema import ProductInventoryCreate
 from app.models.inventory_history_model import InventoryHistory
 
 
-def create_inventory(db: Session, data: ProductInventoryCreate):
+def create_inventory(db: Session, data: ProductInventoryCreate, user_id: int):
     existing = (
         db.query(ProductInventory)
         .filter(ProductInventory.product_id == data.product_id)
@@ -18,12 +18,14 @@ def create_inventory(db: Session, data: ProductInventoryCreate):
         )
 
     inventory = ProductInventory(product_id=data.product_id, stock=data.stock)
+    inventory.user_id = user_id
     db.add(inventory)
     db.commit()
     db.refresh(inventory)
 
     history = InventoryHistory(
         product_id=inventory.product_id,
+        user_id=user_id,
         change_type="create",
         quantity_change=data.stock,
     )
@@ -33,7 +35,9 @@ def create_inventory(db: Session, data: ProductInventoryCreate):
     return inventory
 
 
-def update_stock(db: Session, product_id: int, change: int, change_type: str):
+def update_stock(
+    db: Session, product_id: int, change: int, change_type: str, user_id: int
+):
     inventory = (
         db.query(ProductInventory)
         .filter(ProductInventory.product_id == product_id)
@@ -51,14 +55,19 @@ def update_stock(db: Session, product_id: int, change: int, change_type: str):
         )
 
     inventory.stock = new_stock
+    inventory.user_id = user_id
     db.commit()
     db.refresh(inventory)
 
     history = InventoryHistory(
-        product_id=inventory.product_id, change_type=change_type, quantity_change=change
+        product_id=inventory.product_id,
+        user_id=user_id,
+        change_type=change_type,
+        quantity_change=change,
     )
     db.add(history)
     db.commit()
+    db.refresh(history)
 
     return inventory
 

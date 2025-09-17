@@ -27,3 +27,5 @@ class User(Base):
     reviews = relationship("Review", back_populates="user")
     wishlist_items = relationship("Wishlist", back_populates="user")
     role = relationship("Role", back_populates="users")
+    inventory_histories = relationship("InventoryHistory", back_populates="user")
+    product_inventory = relationship("ProductInventory", back_populates="user")
