@@ -27,7 +27,7 @@ class User(BaseModel):
     first_name: str
     last_name: str
     email: str
-    role: str
+    role_id: int
     status: str
     is_verified: bool
 
