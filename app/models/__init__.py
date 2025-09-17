@@ -9,3 +9,6 @@ from .payment_model import Payment
 from .shipping_model import Shipping
 from .review_model import Review
 from .wishlist_model import Wishlist
+from .product_inventory_model import ProductInventory
+from .inventory_history_model import InventoryHistory
+from .role_model import Role

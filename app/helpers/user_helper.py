@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from ..models import user_model
+from ..models import user_model, role_model
 from ..schemas import user_schema
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
@@ -18,6 +18,13 @@ def create_user(
     role: str = "user",
     is_system_generated: bool = False,
 ):
+
+    db_role = db.query(role_model.Role).filter_by(role=role).first()
+    if not db_role:
+        db_role = role_model.Role(role=role)
+        db.add(db_role)
+        db.commit()
+        db.refresh(db_role)
     hashed_password = pwd_context.hash(user.password)
     verification_token = secrets.token_urlsafe(32)
     db_user = user_model.User(
@@ -25,7 +32,7 @@ def create_user(
         last_name=user.last_name,
         email=user.email,
         hashed_password=hashed_password,
-        role=role,
+        role_id=db_role.id if db_role else None,
         is_verified=True if is_system_generated else False,
         verification_token=verification_token if not is_system_generated else None,
     )
