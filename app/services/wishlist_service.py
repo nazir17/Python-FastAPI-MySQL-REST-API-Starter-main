@@ -12,5 +12,5 @@ def remove_from_wishlist(db: Session, product_id: int, current_user: User):
     return wishlist_helper.remove_from_wishlist(db, product_id, current_user)
 
 
-def get_user_wishlist(db: Session, current_user: User):
-    return wishlist_helper.get_user_wishlist(db, current_user)
+def get_user_wishlist(db: Session, current_user: User, skip: int = 0, limit: int = 100):
+    return wishlist_helper.get_user_wishlist(db, current_user, skip=skip, limit=limit)

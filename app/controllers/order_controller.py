@@ -22,8 +22,8 @@ router = APIRouter()
 
 
 @router.get("/", response_model=response_schema.ListResponse[order_schema.OrderOut])
-def get_orders(db: Session = Depends(get_db)):
-    orders = order_service.get_orders_service(db)
+def get_orders(db: Session = Depends(get_db), skip: int = 0, limit: int = 10):
+    orders = order_service.get_orders_service(db, skip=skip, limit=limit)
     return success_response(
         data=[order_schema.OrderOut.from_orm(order) for order in orders]
     )

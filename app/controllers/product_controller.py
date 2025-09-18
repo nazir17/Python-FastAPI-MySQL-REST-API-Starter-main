@@ -9,8 +9,8 @@ router = APIRouter()
 
 
 @router.get("/", response_model=response_schema.ListResponse[product_schema.ProductOut])
-def get_products(db: Session = Depends(get_db)):
-    products = product_service.get_products(db)
+def get_products(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
+    products = product_service.get_products(db, skip=skip, limit=limit)
     return success_response(
         data=[product_schema.ProductOut.from_orm(product) for product in products]
     )

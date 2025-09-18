@@ -49,8 +49,12 @@ def remove_from_wishlist(
 def get_user_wishlist(
     db: Session = Depends(get_db),
     current_user: user_schema.User = Depends(verify_access_token),
+    skip: int = 0,
+    limit: int = 100,
 ):
-    wishlists = wishlist_service.get_user_wishlist(db, current_user)
+    wishlists = wishlist_service.get_user_wishlist(
+        db, current_user, skip=skip, limit=limit
+    )
     return success_response(
         data=[wishlist_schema.WishlistOut.from_orm(wishlist) for wishlist in wishlists]
     )

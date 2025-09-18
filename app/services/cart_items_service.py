@@ -31,9 +31,11 @@ def delete_cart_item(db: Session, cart_item_id: int):
         raise CustomException(message=str(e))
 
 
-def get_cart_items(db: Session, current_user: User):
+def get_cart_items(db: Session, current_user: User, skip: int = 0, limit: int = 100):
     try:
-        return cart_items_helper.get_cart_items(db, current_user)
+        return cart_items_helper.get_cart_items(
+            db, current_user, skip=skip, limit=limit
+        )
     except Exception as e:
         raise CustomException(message=str(e))
 
