@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import Optional
+
 
 
 class ProductBase(BaseModel):
@@ -6,6 +8,7 @@ class ProductBase(BaseModel):
     description: str
     price: float
     stock: int
+    rating: Optional[float] = 0.0
     category_id: int
 
 

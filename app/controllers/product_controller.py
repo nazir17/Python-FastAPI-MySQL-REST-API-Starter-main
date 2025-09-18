@@ -4,6 +4,7 @@ from ..schemas import product_schema, response_schema
 from ..services import product_service
 from app.configs.database import get_db
 from app.helpers.response_helper import success_response
+from typing import List
 
 router = APIRouter()
 
@@ -42,3 +43,8 @@ def update_product(
 @router.delete("/{id}")
 def delete_product(id: int, db: Session = Depends(get_db)):
     return {"detail": "Product deleted successfully"}
+
+
+@router.get("/search/", response_model=List[product_schema.ProductOut])
+def search_products(query: str, db: Session = Depends(get_db)):
+    return product_service.search_products(db, query)

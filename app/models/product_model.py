@@ -6,12 +6,14 @@ from sqlalchemy.orm import relationship
 class Product(Base):
     __tablename__ = "products"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     # SKU = Column(String(50))
     name = Column(String(50))
     description = Column(String(500))
     price = Column(Float)
     stock = Column(Integer)
+    rating = Column(Float, default=0.0)
+
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
 
     category = relationship("Category", back_populates="products")
@@ -19,5 +21,7 @@ class Product(Base):
     cart_items = relationship("CartItem", back_populates="product")
     reviews = relationship("Review", back_populates="product")
     wishlist_items = relationship("Wishlist", back_populates="product")
-    inventory = relationship("ProductInventory", back_populates="product", uselist=False)
+    inventory = relationship(
+        "ProductInventory", back_populates="product", uselist=False
+    )
     history = relationship("InventoryHistory", back_populates="product")
