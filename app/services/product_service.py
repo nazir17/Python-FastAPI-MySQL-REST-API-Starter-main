@@ -3,8 +3,8 @@ from ..schemas import product_schema
 from ..helpers import product_helper
 
 
-def get_products(db: Session):
-    return product_helper.get_all_products(db)
+def get_products(db: Session, skip: int = 0, limit: int = 100):
+    return product_helper.get_all_products(db, skip=skip, limit=limit)
 
 
 def add_product(product: product_schema.ProductCreate, db: Session):

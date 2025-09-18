@@ -47,5 +47,11 @@ def remove_from_wishlist(db: Session, product_id: int, current_user: User):
     return wishlist_item
 
 
-def get_user_wishlist(db: Session, current_user: User):
-    return db.query(Wishlist).filter(Wishlist.user_id == current_user.id).all()
+def get_user_wishlist(db: Session, current_user: User, skip: int = 0, limit: int = 100):
+    return (
+        db.query(Wishlist)
+        .filter(Wishlist.user_id == current_user.id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )

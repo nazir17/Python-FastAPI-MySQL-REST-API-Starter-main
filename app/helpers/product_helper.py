@@ -11,8 +11,8 @@ def create_product(db: Session, product: product_schema.ProductCreate):
     return db_product
 
 
-def get_all_products(db: Session):
-    return db.query(product_model.Product).all()
+def get_all_products(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(product_model.Product).offset(skip).limit(limit).all()
 
 
 def get_product_by_id(db: Session, product_id: int):

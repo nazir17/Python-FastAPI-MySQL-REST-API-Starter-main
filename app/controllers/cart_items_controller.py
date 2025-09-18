@@ -38,6 +38,8 @@ def delete_cart_item(cart_item_id: int, db: Session = Depends(get_db)):
 
 @router.get("/list", response_model=List[CartItemOut])
 def get_cart_items(
+    skip: int = 0,
+    limit: int = 100,
     current_user: user_schema.User = Depends(verify_access_token),
     db: Session = Depends(get_db),
 ):

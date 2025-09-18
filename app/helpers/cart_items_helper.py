@@ -56,8 +56,14 @@ def delete_cart_item(db: Session, cart_item_id: int):
     return {"success": True, "message": "Cart item deleted"}
 
 
-def get_cart_items(db: Session, current_user: User):
-    return db.query(CartItem).filter(CartItem.user_id == current_user.id).all()
+def get_cart_items(db: Session, current_user: User, skip: int = 0, limit: int = 100):
+    return (
+        db.query(CartItem)
+        .filter(CartItem.user_id == current_user.id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 def checkout_cart(db: Session, current_user: User):
