@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from ..models import product_model
 from ..schemas import product_schema
+from app.models.product_model import Product
 
 
 def create_product(db: Session, product: product_schema.ProductCreate):
@@ -41,3 +42,14 @@ def delete_product(db: Session, product_id: int):
         db.commit()
         return True
     return False
+
+
+def search_products(db: Session, query: str):
+    return (
+        db.query(Product)
+        .filter(
+            (Product.name.ilike(f"%{query}%"))
+            | (Product.description.ilike(f"%{query}%"))
+        )
+        .all()
+    )

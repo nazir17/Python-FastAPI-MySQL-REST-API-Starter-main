@@ -17,3 +17,4 @@ def update_category_service(db: Session, category_id: int, category: CategoryUpd
 
 def delete_category_service(db: Session, category_id: int):
     return category_helper.delete_category(db, category_id)
+

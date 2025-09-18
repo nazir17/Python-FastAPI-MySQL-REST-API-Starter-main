@@ -21,3 +21,7 @@ def update_product(id: int, product: product_schema.ProductCreate, db: Session):
 
 def delete_product(id: int, db: Session):
     return product_helper.delete_product(db, id)
+
+
+def search_products(db: Session, query: str):
+    return product_helper.search_products(db, query)
