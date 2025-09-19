@@ -31,3 +31,13 @@ def update_category(
 @router.delete("/{category_id}/", status_code=200)
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     return category_service.delete_category_service(db, category_id)
+
+
+@router.get("/{category_id}/subcategories", response_model=CategoryOut)
+def get_category_hierarchy(category_id: int, db: Session = Depends(get_db)):
+    return category_service.get_category_with_subcategories_service(db, category_id)
+
+
+@router.get("/{category_id}/subcategories", response_model=CategoryOut)
+def get_category_hierarchy(category_id: int, db: Session = Depends(get_db)):
+    return category_service.get_category_hierarchy_service(db, category_id)
