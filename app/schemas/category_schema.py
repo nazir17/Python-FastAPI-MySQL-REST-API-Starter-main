@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List
 
@@ -15,21 +15,12 @@ class CategoryUpdate(BaseModel):
     name: Optional[str] = None
     parent_id: Optional[int] = None
 
-class CategoryChild(BaseModel):
-    id: int
-    name: str
-    parent_id: Optional[int]
-
-    class Config:
-        orm_mode = True
-
-
 class CategoryOut(CategoryBase):
     id: int
     is_deleted: bool
     created_at: datetime
     updated_at: Optional[datetime]
-    children: List["CategoryChild"] = []  
+    childrens: List["CategoryOut"] = Field(default_factory=list)
 
     class Config:
         orm_mode = True

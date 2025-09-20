@@ -21,9 +21,5 @@ def delete_category_service(db: Session, category_id: int):
     return category_helper.delete_category(db, category_id)
 
 
-def get_category_with_subcategories_service(db: Session, category_id: int):
-    return category_helper.get_category_with_subcategories(db, category_id)
-
-
 def get_category_hierarchy_service(db: Session, category_id: int):
     return category_helper.get_category_hierarchy(db, category_id)
