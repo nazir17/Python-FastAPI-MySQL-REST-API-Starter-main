@@ -8,7 +8,9 @@ def create_category_service(db: Session, category: CategoryCreate):
 
 
 def get_categories_service(db: Session, skip: int = 0, limit: int = 100):
-    return category_helper.get_categories(db, skip=skip, limit=limit)
+    # return category_helper.get_categories(db, skip=skip, limit=limit)
+    categories = category_helper.get_categories(db, skip=skip, limit=limit)
+    return category_helper.build_category_tree(categories)
 
 
 def update_category_service(db: Session, category_id: int, category: CategoryUpdate):
@@ -18,3 +20,6 @@ def update_category_service(db: Session, category_id: int, category: CategoryUpd
 def delete_category_service(db: Session, category_id: int):
     return category_helper.delete_category(db, category_id)
 
+
+def get_category_hierarchy_service(db: Session, category_id: int):
+    return category_helper.get_category_hierarchy(db, category_id)
