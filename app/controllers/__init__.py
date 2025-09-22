@@ -15,7 +15,7 @@ from . import (
     wishlist_controller,
     product_inventory_controller,
     role_controller,
-    product_filter_controller
+    chat_support_controller
 )
 
 
@@ -51,5 +51,5 @@ def register_routers(app):
         role_controller.router, prefix="/api/role", tags=["Roles"]
     )
     app.include_router(
-        product_filter_controller.router, prefix="/api", tags=["Filters"]
+        chat_support_controller.router, prefix="/api", tags=["Chats"]
     )
