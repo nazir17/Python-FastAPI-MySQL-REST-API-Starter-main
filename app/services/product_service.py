@@ -25,3 +25,17 @@ def delete_product(id: int, db: Session):
 
 def search_products(db: Session, query: str):
     return product_helper.search_products(db, query)
+
+
+def filter_products(
+    db: Session,
+    q=None,
+    min_price=None,
+    max_price=None,
+    min_rating=None,
+    availability=None,
+    sort_by=None,
+):
+    return product_helper.filter_products(
+        db, q, min_price, max_price, min_rating, availability, sort_by
+    )

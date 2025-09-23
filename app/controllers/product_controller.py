@@ -48,3 +48,18 @@ def delete_product(id: int, db: Session = Depends(get_db)):
 @router.get("/search/", response_model=List[product_schema.ProductOut])
 def search_products(query: str, db: Session = Depends(get_db)):
     return product_service.search_products(db, query)
+
+
+@router.get("/filter", response_model=List[product_schema.ProductOut])
+def filter_products(
+    q: str | None = None,
+    min_price: float | None = None,
+    max_price: float | None = None,
+    min_rating: float | None = None,
+    availability: bool | None = None,
+    sort_by: str | None = None,
+    db: Session = Depends(get_db),
+):
+    return product_service.filter_products(
+        db, q, min_price, max_price, min_rating, availability, sort_by
+    )
