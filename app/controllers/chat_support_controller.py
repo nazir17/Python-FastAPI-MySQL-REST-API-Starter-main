@@ -38,3 +38,4 @@ async def chat_ws(websocket: WebSocket, user_id: int, db: Session = Depends(get_
             await chat_support_helper.send_ws_message(chat)
     except WebSocketDisconnect:
         chat_support_helper.disconnect_ws(user_id)
+
