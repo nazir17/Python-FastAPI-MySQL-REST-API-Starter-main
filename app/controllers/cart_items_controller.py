@@ -7,7 +7,8 @@ from app.services import cart_items_service
 from app.middleware.verify_access_token import verify_access_token
 from app.schemas import user_schema
 from app.schemas.order_schema import OrderOut
-from app.services.cart_items_service import checkout
+from app.schemas.checkout_schema import CheckoutShippingRequest, CheckoutPaymentRequest, CheckoutCompleteRequest, CheckoutResponse
+from app.services import cart_items_service
 
 
 router = APIRouter()
@@ -46,9 +47,53 @@ def get_cart_items(
     return cart_items_service.get_cart_items(db, current_user)
 
 
-@router.post("/checkout", response_model=OrderOut)
-def checkout_order(
+@router.post("/checkout/shipping", response_model=CheckoutResponse)
+def checkout_shipping(
+    payload: CheckoutShippingRequest,
     db: Session = Depends(get_db),
     current_user: user_schema.User = Depends(verify_access_token),
 ):
-    return checkout(db, current_user)
+    order = cart_items_service.checkout_shipping(db, current_user, payload)
+    return {
+        "order_id": order.id,
+        "subtotal_amount": order.subtotal_amount,
+        "discount_amount": order.discount_amount,
+        "shipping_fee": order.shipping_fee,
+        "total_amount": order.total_amount,
+        "status": order.status,
+        "created_at": order.created_at,
+    }
+
+@router.post("/checkout/payment", response_model=CheckoutResponse)
+def checkout_payment(
+    payload: CheckoutPaymentRequest,
+    db: Session = Depends(get_db),
+    current_user: user_schema.User = Depends(verify_access_token),
+):
+    order = cart_items_service.checkout_payment(db, current_user, payload.order_id, payload.payment_method, payload.transaction_id)
+    return {
+        "order_id": order.id,
+        "subtotal_amount": order.subtotal_amount,
+        "discount_amount": order.discount_amount,
+        "shipping_fee": order.shipping_fee,
+        "total_amount": order.total_amount,
+        "status": order.status,
+        "created_at": order.created_at,
+    }
+
+@router.post("/checkout/complete", response_model=CheckoutResponse)
+def checkout_complete(
+    payload: CheckoutCompleteRequest,
+    db: Session = Depends(get_db),
+    current_user: user_schema.User = Depends(verify_access_token),
+):
+    order = cart_items_service.checkout_complete(db, current_user, payload.order_id)
+    return {
+        "order_id": order.id,
+        "subtotal_amount": order.subtotal_amount,
+        "discount_amount": order.discount_amount,
+        "shipping_fee": order.shipping_fee,
+        "total_amount": order.total_amount,
+        "status": order.status,
+        "created_at": order.created_at,
+    }

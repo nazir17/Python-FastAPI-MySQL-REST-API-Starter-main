@@ -4,6 +4,7 @@ from app.helpers.exceptions import CustomException
 from app.models.user_model import User
 from app.helpers import order_helper
 from app.models.order_model import Order
+from app.schemas.checkout_schema import CheckoutShippingRequest
 
 
 def add_to_cart(
@@ -40,5 +41,11 @@ def get_cart_items(db: Session, current_user: User, skip: int = 0, limit: int = 
         raise CustomException(message=str(e))
 
 
-def checkout(db: Session, current_user: User) -> Order:
-    return cart_items_helper.checkout_cart(db, current_user)
+def checkout_shipping(db: Session, current_user, payload: CheckoutShippingRequest):
+    return cart_items_helper.checkout_shipping_step(db, current_user, payload)
+
+def checkout_payment(db: Session, current_user, order_id: int, payment_method: str, transaction_id: str = None):
+    return cart_items_helper.checkout_payment_step(db, current_user, order_id, payment_method, transaction_id)
+
+def checkout_complete(db: Session, current_user, order_id: int):
+    return cart_items_helper.checkout_complete_step(db, current_user, order_id)

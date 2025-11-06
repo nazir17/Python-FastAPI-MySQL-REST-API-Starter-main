@@ -14,6 +14,7 @@ from app.middleware.exception_handler_middleware import (
 )
 from fastapi.exceptions import RequestValidationError, HTTPException
 from app.controllers import register_routers
+from fastapi.middleware.cors import CORSMiddleware
 
 user_model.Base.metadata.create_all(bind=engine)
 
@@ -25,6 +26,16 @@ app = FastAPI(
     title="FastAPI MySQL REST API Starter App",
     description="This is a sample application that demonstrates how to use FastAPI with MySQL",
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.add_exception_handler(CustomException, custom_exception_handler)

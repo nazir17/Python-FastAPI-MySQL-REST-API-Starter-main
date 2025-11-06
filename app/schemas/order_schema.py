@@ -21,7 +21,11 @@ class OrderUpdate(BaseModel):
 class OrderOut(OrderBase):
     id: int
     status: OrderStatus
+    subtotal_amount: float
+    shipping_fee: float
+    discount_amount: float
     total_amount: float
+    coupon_code: Optional[str] = None
     created_at: datetime
     updated_at: Optional[datetime]
     order_items: List[OrderItemOut] = []
