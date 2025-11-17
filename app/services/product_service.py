@@ -35,7 +35,26 @@ def filter_products(
     min_rating=None,
     availability=None,
     sort_by=None,
+    category=None,
+    sizes=None,
+    neck=None,
+    color=None,
+    design=None,
+    discount=None,
 ):
     return product_helper.filter_products(
-        db, q, min_price, max_price, min_rating, availability, sort_by
+        db,
+        q,
+        min_price,
+        max_price,
+        min_rating,
+        availability,
+        sort_by,
+        category,
+        sizes,
+        neck,
+        color,
+        design,
+        discount,
     )
+

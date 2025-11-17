@@ -7,13 +7,16 @@ class Product(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    # SKU = Column(String(50))
     name = Column(String(50))
     description = Column(String(500))
     price = Column(Float)
     stock = Column(Integer)
     rating = Column(Float, default=0.0)
-
+    size = Column(String(20))
+    neck = Column(String(20))
+    color = Column(String(20))
+    design = Column(String(50))
+    discount = Column(Integer)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
 
     category = relationship("Category", back_populates="products")

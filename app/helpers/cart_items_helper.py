@@ -10,6 +10,10 @@ from app.models.billing_model import Billing
 from app.models.coupon_model import Coupon
 from app.schemas.checkout_schema import CheckoutShippingRequest
 from app.models.order_model import OrderStatus
+import uuid
+from app.schemas.payment_schema import PaymentStatusEnum
+from app.models.payment_model import Payment
+import uuid
 
 SHIPPING_FEES = {"free": 0.0, "standard": 8.90, "fast": 9.90}
 
@@ -74,7 +78,7 @@ def get_cart_items(db: Session, current_user: User, skip: int = 0, limit: int = 
 
 def checkout_shipping_step(db: Session, current_user, payload: CheckoutShippingRequest):
     cart_query = db.query(CartItem).filter(CartItem.user_id == current_user.id)
-    if payload.cart_item_ids:
+    if payload.cart_item_ids and len(payload.cart_item_ids) > 0:
         cart_query = cart_query.filter(CartItem.id.in_(payload.cart_item_ids))
     cart_items = cart_query.all()
 
@@ -93,7 +97,8 @@ def checkout_shipping_step(db: Session, current_user, payload: CheckoutShippingR
     discount = 0.0
     if payload.coupon_code:
         coupon = db.query(Coupon).filter(
-            Coupon.code == payload.coupon_code, Coupon.is_active == True
+            Coupon.code == payload.coupon_code,
+            Coupon.is_active == True
         ).first()
         if not coupon:
             raise HTTPException(status_code=400, detail="Invalid coupon")
@@ -124,10 +129,13 @@ def checkout_shipping_step(db: Session, current_user, payload: CheckoutShippingR
             price=product.price,
         ))
 
+    tracking_number = f"{payload.shipping.courier.upper()}-{uuid.uuid4().hex[:10]}"
+
     db.add(Shipping(
         order_id=new_order.id,
         address=payload.shipping.address,
         courier=payload.shipping.courier,
+        tracking_number=tracking_number,
         method=payload.shipping.method,
         fee=shipping_fee,
         status="pending",
@@ -143,11 +151,31 @@ def checkout_shipping_step(db: Session, current_user, payload: CheckoutShippingR
     return new_order
 
 def checkout_payment_step(db: Session, current_user, order_id: int, payment_method: str, transaction_id: str = None):
-    order = db.query(Order).filter(Order.id == order_id, Order.user_id == current_user.id).first()
+
+    order = db.query(Order).filter(
+        Order.id == order_id,
+        Order.user_id == current_user.id
+    ).first()
+
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    order.status = OrderStatus.shipped if payment_method == "cash" else OrderStatus.pending
+    if payment_method != "cod" and not transaction_id:
+        transaction_id = f"{payment_method.upper()}-{uuid.uuid4().hex[:10]}"
+
+    payment = Payment(
+        user_id=current_user.id,
+        order_id=order_id,
+        method=payment_method,
+        amount=order.total_amount,
+        currency="INR",
+        status=PaymentStatusEnum.success if payment_method != "cod" else PaymentStatusEnum.pending,
+        transaction_id=transaction_id,
+    )
+
+    db.add(payment)
+
+    order.status = OrderStatus.shipped if payment_method == "cod" else OrderStatus.pending
     db.commit()
     db.refresh(order)
     return order
@@ -157,8 +185,14 @@ def checkout_complete_step(db: Session, current_user, order_id: int):
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    order.status = OrderStatus.delivered
-    db.query(CartItem).filter(CartItem.user_id == current_user.id).delete()
+    ordered_product_ids = [item.product_id for item in order.order_items]
+
+    db.query(CartItem).filter(
+        CartItem.user_id == current_user.id,
+        CartItem.product_id.in_(ordered_product_ids)
+    ).delete(synchronize_session=False)
+
+    order.status = OrderStatus.pending
     db.commit()
     db.refresh(order)
     return order

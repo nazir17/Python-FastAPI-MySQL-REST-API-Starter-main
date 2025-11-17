@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from ..schemas import product_schema, response_schema
 from ..services import product_service
@@ -22,6 +22,33 @@ def add_product(product: product_schema.ProductCreate, db: Session = Depends(get
     return product_service.add_product(product, db)
 
 
+@router.get("/search/", response_model=List[product_schema.ProductOut])
+def search_products(query: str, db: Session = Depends(get_db)):
+    return product_service.search_products(db, query)
+
+
+@router.get("/filter")
+def filter_products(
+    q: str | None = None,
+    min_price: float | None = None,
+    max_price: float | None = None,
+    min_rating: float | None = None,
+    availability: bool | None = None,
+    sort_by: str | None = None,
+    category: List[str] | None = Query(None),
+    sizes: List[str] | None = Query(None),
+    neck: List[str] | None = Query(None),
+    color: List[str] | None = Query(None),
+    design: List[str] | None = Query(None),
+    discount: List[int] | None = Query(None),
+    db: Session = Depends(get_db),
+):
+    return product_service.filter_products(
+        db, q, min_price, max_price, min_rating, availability, sort_by,
+        category, sizes, neck, color, design, discount
+    )
+
+
 @router.get(
     "/{id}", response_model=response_schema.SingleResponse[product_schema.ProductOut]
 )
@@ -43,23 +70,3 @@ def update_product(
 @router.delete("/{id}")
 def delete_product(id: int, db: Session = Depends(get_db)):
     return {"detail": "Product deleted successfully"}
-
-
-@router.get("/search/", response_model=List[product_schema.ProductOut])
-def search_products(query: str, db: Session = Depends(get_db)):
-    return product_service.search_products(db, query)
-
-
-@router.get("/filter", response_model=List[product_schema.ProductOut])
-def filter_products(
-    q: str | None = None,
-    min_price: float | None = None,
-    max_price: float | None = None,
-    min_rating: float | None = None,
-    availability: bool | None = None,
-    sort_by: str | None = None,
-    db: Session = Depends(get_db),
-):
-    return product_service.filter_products(
-        db, q, min_price, max_price, min_rating, availability, sort_by
-    )

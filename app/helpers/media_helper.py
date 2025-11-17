@@ -15,13 +15,13 @@ DOCUMENT_DIR = UPLOAD_DIR / "documents"
 for path in [UPLOAD_DIR, PRODUCT_DIR, CATEGORY_DIR, DOCUMENT_DIR]:
     os.makedirs(path, exist_ok=True)
 
-IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "webp"}
+IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "webp", "svg"}
 VIDEO_EXTENSIONS = {"mp4", "mov", "avi", "mkv", "webm"}
 DOCUMENT_EXTENSIONS = {"pdf", "doc", "docx", "txt", "xls", "xlsx", "ppt", "pptx"}
 
-MAX_IMAGES = 5
-MAX_VIDEOS = 5
-MAX_FILES = 5
+MAX_IMAGES = 100
+MAX_VIDEOS = 100
+MAX_FILES = 100
 ALLOWED_DIMENSIONS = {(400, 400), (500, 500), (973, 1280)}
 
 

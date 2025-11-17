@@ -60,21 +60,39 @@ def search_products(db: Session, query: str):
 
 def filter_products(
     db: Session,
-    q: str | None,
-    min_price: float | None = None,
-    max_price: float | None = None,
-    min_rating: float | None = None,
-    availability: bool | None = None,
-    sort_by: str | None = None,
+    q=None,
+    min_price=None,
+    max_price=None,
+    min_rating=None,
+    availability=None,
+    sort_by=None,
+    category: list[str] | None = None,
+    sizes: list[str] | None = None,
+    neck: list[str] | None = None,
+    color: list[str] | None = None,
+    design: list[str] | None = None,
+    discount: list[int] | None = None,
 ):
     query = db.query(Product)
 
     if q:
         query = query.join(Category, isouter=True).filter(
-            (Product.name.ilike(f"%{q}%"))
-            | (Product.description.ilike(f"%{q}%"))
-            | (Category.name.ilike(f"%{q}%"))
+            Product.name.ilike(f"%{q}%")
+            | Product.description.ilike(f"%{q}%")
+            | Category.name.ilike(f"%{q}%")
         )
+    if category:
+        query = query.join(Category).filter(Category.name.in_(category))
+    if sizes:
+        query = query.filter(Product.size.in_(sizes))
+    if neck:
+        query = query.filter(Product.neck.in_(neck))
+    if color:
+        query = query.filter(Product.color.in_(color))
+    if design:
+        query = query.filter(Product.design.in_(design))
+    if discount:
+        query = query.filter(Product.discount.in_(discount))
     if min_price is not None:
         query = query.filter(Product.price >= min_price)
     if max_price is not None:
@@ -85,16 +103,16 @@ def filter_products(
         query = query.filter(Product.stock > 0)
 
     sort_options = {
-        "price low to high": (Product.price, asc),
-        "price high to low": (Product.price, desc),
-        "rating high to low": (Product.rating, desc),
-        "rating low to high": (Product.rating, asc),
+        "price_low": (Product.price, asc),
+        "price_high": (Product.price, desc),
+        "rating_high": (Product.rating, desc),
+        "rating_low": (Product.rating, asc),
         "newest": (Product.id, desc),
         "oldest": (Product.id, asc),
     }
 
     if sort_by in sort_options:
-        column, order_fn = sort_options[sort_by]
-        query = query.order_by(order_fn(column))
+        col, fn = sort_options[sort_by]
+        query = query.order_by(fn(col))
 
     return query.all()
